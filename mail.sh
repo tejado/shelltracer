@@ -12,5 +12,10 @@ MAIL_TITLE="$1"
 MAIL_MESSAGE="$2"
 
 echo "${MAIL_MESSAGE}" | mail -s "${MAIL_TITLE}" ${EMAIL} >${LOGFILE} 2>&1
+RC=$?
+if [ ! ${RC} -eq 0 ];then
+	echo "ERROR: Not able to sen mail" >>${LOGFILE}
+	exit 1
+fi
 echo >> ${LOGFILE}
 
