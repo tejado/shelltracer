@@ -69,7 +69,7 @@ MESSAGE_TITLE=${TITLE}
 MESSAGE=$(cat $LOGFILE_TEMP)
 for TYPE in $(echo ${NOTIFY_TYPE});do
 	if [ -f ${SCRIPT_DIR}/${TYPE}.sh ];then
-		echo "${SCRIPT_DIR}/${TYPE}.sh" >> ${LOGFILE_TEMP}
+		echo "Loaded modul: ${SCRIPT_DIR}/${TYPE}.sh" >> ${LOGFILE_TEMP}
 		${SCRIPT_DIR}/${TYPE}.sh "${MESSAGE_TITLE}" "${MESSAGE}"
 	else
 		echo "ERROR: Message module \"${SCRIPT_DIR}/${TYPE}.sh\" can not be loaded."
