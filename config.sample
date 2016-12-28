@@ -4,19 +4,11 @@ PUSHOVER_TOKEN_APP="your_pushover_app_token"
 PUSHOVER_TOKEN_USER="your_pushover_user_token"
 
 TITLE="Shelltracer"
+NOTIFY_TYPE="pushover mail"
+EMAIL=""
 
-LOGFILE=/var/log/shelltracer/log-trace.log
+LOGFILE="/var/log/shelltracer/log-trace.log"
 
 # disables logout notifications if set to NO
 LOGOUT_NOTIFICATION="NO"
-
-DATE=/bin/date
-JOT=/usr/bin/jot
-ID=/usr/bin/id
-CURL=/usr/local/bin/curl
-NOHUP=/usr/bin/nohup
-HOST=/usr/bin/host
-HOSTNAME=/bin/hostname
-W=/usr/bin/w
-AWK=/usr/bin/awk
 
