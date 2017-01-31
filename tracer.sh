@@ -1,18 +1,24 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
+trap 'echo killsignal received' SIGTERM SIGINT
+
+##################################
+# CONFIGURATION
 SCRIPT_DIR=`dirname $0`
 . "${SCRIPT_DIR}/config"
-
-NOW_UNIX=`${DATE} +%s`
-NOW_HUMAN=`${DATE} "+%F %H:%M:%S"`
-RAND=`${JOT} -r 1 1000`
-MACHINE=`hostname`
- 
+NOW_UNIX=$(date +%s)
+NOW_HUMAN=$(date "+%F %H:%M:%S")
+RAND=0; while [ "$RAND" -le 1 ];do RAND=$RANDOM; let "RAND %= 1000";done
+MACHINE=$(hostname)
 LOGFILE_TEMP="${LOGFILE}.${NOW_UNIX}.${RAND}"
+PUSHOVER_URL="https://api.pushover.net/1/messages.json"
+
+touch ${SCRIPT_DIR}/log-error.log
+exec 2> >(logger -f ${SCRIPT_DIR}/log-error.log) 
 
 
 exit_program() {
-  ${W} >> $LOGFILE_TEMP
+  w >> $LOGFILE_TEMP
   echo $1 >> $LOGFILE_TEMP
   echo "==========================================================" >> $LOGFILE_TEMP
   cat $LOGFILE_TEMP >> $LOGFILE
@@ -42,15 +48,16 @@ else
   ACTION="TERM EXEC"
 fi
 
-
-echo "Service: ${SERVICE}" >> $LOGFILE_TEMP
-echo "Action: ${ACTION}" >> $LOGFILE_TEMP
-echo "Date: ${NOW_HUMAN}" >> $LOGFILE_TEMP
-echo "Server: ${MACHINE}" >> $LOGFILE_TEMP
-echo "User: ${USER}" >> $LOGFILE_TEMP
+cat <<EOF >> $LOGFILE_TEMP
+Service: ${SERVICE}
+Action: ${ACTION}
+Date: ${NOW_HUMAN}
+Server: ${MACHINE}
+User: ${USER}
+EOF
 
 if [ ! -z "$PAM_RHOST" ]; then
-  IP=`${HOST} -W5 -t A $PAM_RHOST | ${AWK} '{ print $4 }'`
+  IP=`host -W5 -t A $PAM_RHOST | awk '{ print $4 }'`
 
   echo "User Host: ${PAM_RHOST}" >> $LOGFILE_TEMP
   echo "User IP: $IP" >> $LOGFILE_TEMP
@@ -61,8 +68,10 @@ if [ "${ACTION}" == "Logout" ] && [ "${LOGOUT_NOTIFICATION}" == "NO" ]; then
   exit_program "Logout END - skipping pushover notification"
 fi
 
+##################################
+# PUSHOVER
 PUSHOVER_TITLE=$TITLE
-PUSHOVER_MESSAGE=`cat $LOGFILE_TEMP`
-${SCRIPT_DIR}/notify.sh "${PUSHOVER_TITLE}" "${PUSHOVER_MESSAGE}"
+PUSHOVER_MESSAGE=$(cat $LOGFILE_TEMP)
+curl -s -F "token=${PUSHOVER_TOKEN_APP}" -F "user=${PUSHOVER_TOKEN_USER}" -F "title=${PUSHOVER_TITLE}" -F "message=${PUSHOVER_MESSAGE}" ${PUSHOVER_URL} >> ${LOGFILE} 2>&1
 
 exit_program "${ACTION} END"
