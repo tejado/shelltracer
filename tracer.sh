@@ -1,4 +1,3 @@
-#!/usr/local/bin/bash
 PATH="/bin:/usr/bin:/usr/local/bin:$PATH"
 
 trap 'echo killsignal received' SIGTERM SIGINT
