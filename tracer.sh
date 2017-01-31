@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-PATH="/usr/bin;/usr/local/bin;$PATH"
+PATH="/bin;/usr/bin;/usr/local/bin;$PATH"
 
 trap 'echo killsignal received' SIGTERM SIGINT
 
