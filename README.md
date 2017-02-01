@@ -8,6 +8,7 @@ Then add following line to your /etc/pam.d/sshd file:
 ```
 session         optional        pam_exec.so             /bin/bash /root/shelltracer/tracer.sh
 ```
+Adjust the path to bash to reflect your systm confiuration.
 
 ## Demo
 
