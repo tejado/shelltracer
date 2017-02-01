@@ -8,7 +8,7 @@ SCRIPT_DIR=`dirname $0`
 . "${SCRIPT_DIR}/config"
 NOW_UNIX=$(date +%s)
 NOW_HUMAN=$(date "+%F %H:%M:%S")
-RAND=0; while [ "$RAND" -le 1 ];do RAND=$RANDOM; let "RAND %= 1000";done
+RAND="$((RANDOM%1000+1))"
 MACHINE=$(hostname)
 LOGFILE_TEMP="${LOGFILE}.${NOW_UNIX}.${RAND}"
 PUSHOVER_URL="https://api.pushover.net/1/messages.json"
