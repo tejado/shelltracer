@@ -6,6 +6,8 @@ PUSHOVER_TOKEN_USER="your_pushover_user_token"
 # installed telegram-cli is needed 
 USE_TELEGRAM="NO"
 TELEGRAM_ACCOUNT_NAME="your_telegram_account_name"
+TELEGRAM=/bin/telegram-bin
+TELEGRAM_SERVER_KEY=/etc/telegram-bin/server.pub
 
 
 TITLE="Shelltracer"
@@ -24,4 +26,5 @@ HOST=/usr/bin/host
 HOSTNAME=/bin/hostname
 W=/usr/bin/w
 AWK=/usr/bin/awk
+
 
